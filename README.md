@@ -42,5 +42,5 @@ A simple Ruby on Rails application to manage Restaurants, Dishes and Orders, bui
 
 1. **Clone the repo**  
    ```bash
-   git clone git@github.com:yourusername/restaurant-manager.git
+   git clone git@github.com:sntggrz/restaurant-manager.git
    cd restaurant-manager
