@@ -1,0 +1,48 @@
+<%# locals: f, restaurant %>
+<div class="item-row bg-white shadow rounded-lg p-4 grid grid-cols-1 md:grid-cols-5 gap-3 items-end relative group"
+     data-item-row-target="row">
+
+  <!-- Dish -->
+  <div class="md:col-span-2">
+    <%= f.label :dish_id, "Dish", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.select :dish_id,
+          options_for_select(dish_options(restaurant), f.object.dish_id),
+          { prompt: "Select a dish" },
+          class: "w-full rounded-md border-gray-300 shadow-sm px-3 py-2 focus:border-blue-500 focus:ring-blue-500",
+          data: { action: "change->item-row#setPrice" } %>
+  </div>
+
+  <!-- Quantity -->
+  <div>
+    <%= f.label :quantity, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= f.number_field :quantity, min: 1,
+          class: "w-full rounded-md border-gray-300 shadow-sm px-3 py-2 focus:border-blue-500 focus:ring-blue-500",
+          data: { item_row_target: "qty", action: "input->item-row#recalcLine" } %>
+  </div>
+
+  <!-- Price -->
+  <div>
+    <%= f.label :price, class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <div class="relative">
+      <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 text-sm">$</span>
+      <%= f.number_field :price, step: 0.01,
+            class: "pl-6 w-full rounded-md border-gray-300 shadow-sm px-3 py-2 focus:border-blue-500 focus:ring-blue-500",
+            data: { item_row_target: "price", action: "input->item-row#recalcLine" } %>
+    </div>
+  </div>
+
+  <!-- Line total -->
+  <div class="text-right">
+    <label class="block text-sm font-medium text-gray-700 mb-1">Total</label>
+    <p class="text-sm font-semibold" data-item-row-target="lineTotal">
+      <%= number_with_precision((f.object.quantity || 0) * (f.object.price || 0), precision: 2) %>
+    </p>
+  </div>
+
+  <!-- Remove -->
+  <button type="button"
+          class="absolute -top-2 -right-2 hidden group-hover:block bg-red-600 text-white rounded-full w-6 h-6 text-xs"
+          data-action="click->item-row#remove">&times;</button>
+
+  <%= f.hidden_field :_destroy %>
+</div>

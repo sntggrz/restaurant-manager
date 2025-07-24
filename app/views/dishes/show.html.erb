@@ -1,0 +1,55 @@
+<%# Tailwind-y dish show page %>
+<div class="max-w-2xl mx-auto py-10">
+  <% if notice.present? %>
+    <p class="mb-6 rounded-md bg-green-50 border border-green-200 px-4 py-2 text-green-700 text-sm"><%= notice %></p>
+  <% end %>
+
+  <!-- Header -->
+  <div class="relative mb-10">
+    <%= link_to "← Back to dishes",
+          (@restaurant ? restaurant_dishes_path(@restaurant) : dishes_path),
+          class: "absolute left-0 top-1 text-sm text-blue-600 hover:underline" %>
+
+    <h1 class="text-2xl font-semibold text-center"><%= @dish.name %></h1>
+
+    <div class="absolute right-0 top-0 flex gap-3 text-sm">
+      <%= link_to "Edit", (@restaurant ? edit_restaurant_dish_path(@restaurant, @dish) : edit_dish_path(@dish)),
+            class: "text-yellow-600 hover:underline" %>
+      <%= button_to "Destroy", (@restaurant ? restaurant_dish_path(@restaurant, @dish) : dish_path(@dish)),
+            method: :delete,
+            data: { turbo_confirm: "Delete #{@dish.name}?" },
+            class: "text-red-600 hover:underline bg-transparent p-0" %>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="bg-white shadow rounded-xl p-6 space-y-4">
+    <%# Image/logo placeholder if you have an image column (change :photo or :image_url to your attr) %>
+    <% if @dish.photo.attached? %>
+      <%= image_tag url_for(@dish.photo),
+            alt: "#{@dish.name} photo",
+            class: "h-28 w-28 object-cover rounded-md border mb-4" %>
+    <% else %>
+      <%= image_tag(
+            "https://placehold.co/120x120?text=No+Image",
+            alt: "No image available",
+            class: "h-28 w-28 object-cover rounded-md border mb-4"
+          ) %>
+    <% end %>
+
+    <div>
+      <h2 class="text-sm font-medium text-gray-700">Group</h2>
+      <p class="mt-1 text-gray-800"><%= @dish.dish_group.presence || "—" %></p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-medium text-gray-700">Price</h2>
+      <p class="mt-1 text-gray-800">$<%= number_with_precision(@dish.price, precision: 2) %></p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-medium text-gray-700">Description</h2>
+      <p class="mt-1 text-gray-800"><%= @dish.description.presence || "—" %></p>
+    </div>
+  </div>
+</div>

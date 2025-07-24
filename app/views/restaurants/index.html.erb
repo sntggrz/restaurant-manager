@@ -1,0 +1,27 @@
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="h1"></h1>
+    <%= link_to "+ New Restaurant", new_restaurant_path, class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm" %>
+  </div>
+
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <% @restaurants.each do |r| %>
+      <div class="card bg-white shadow rounded-xl p-4">
+        <h2 class="text-xl font-semibold"><%= r.name %></h2>
+        <p class="text-gray-600">
+          🍽 <%= truncate(r.description || "No description", length: 100) %>
+        </p>
+        <p class="muted">📍 <%= r.address %></p>
+        <p class="muted">📞 <%= r.phone %></p>
+
+        <div class="actions mt-2">
+          <%= link_to "Show", r, class: "text-blue-600 hover:underline" %>
+          <%= link_to "Edit", edit_restaurant_path(r), class: "text-yellow-600 hover:underline" %>
+          <%= link_to "Destroy", restaurant_path(r),
+                       data: { turbo_method: :delete, turbo_confirm: "Delete #{r.name}?" },
+                       class: "text-red-600 hover:underline" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<%# app/views/restaurants/show.html.erb %>
+<div class="max-w-2xl mx-auto py-10">
+  <!-- Notice -->
+  <% if notice.present? %>
+    <p class="mb-6 rounded-md bg-green-50 border border-green-200 px-4 py-2 text-green-700 text-sm">
+      <%= notice %>
+    </p>
+  <% end %>
+
+  <!-- Header -->
+  <div class="relative mb-10">
+    <%= link_to "← Back to restaurants", restaurants_path,
+          class: "absolute left-0 top-1 text-sm text-blue-600 hover:underline" %>
+
+    <h1 class="text-2xl font-semibold text-center"><%= @restaurant.name %></h1>
+
+    <div class="absolute right-0 top-0 flex gap-3 text-sm">
+      <%= link_to "Edit", edit_restaurant_path(@restaurant),
+            class: "text-yellow-600 hover:underline" %>
+      <%= button_to "Delete", @restaurant,
+            method: :delete,
+            data: { turbo_confirm: "Delete #{@restaurant.name}?" },
+            class: "text-red-600 hover:underline bg-transparent p-0" %>
+    </div>
+  </div>
+
+  <!-- Details card -->
+  <div class="bg-white shadow rounded-xl p-6 space-y-4">
+    <% if @restaurant.logo.attached? %>
+      <%= image_tag url_for(@restaurant.logo),class: "h-28 w-28 object-cover rounded-md border mb-4", alt: "#{@restaurant.name} logo" %>
+    <% end %>
+
+    <div>
+      <h2 class="text-sm font-medium text-gray-700">Description</h2>
+      <p class="mt-1 text-gray-800"><%= @restaurant.description.presence || "—" %></p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-medium text-gray-700">Address</h2>
+      <p class="mt-1 text-gray-800"><%= @restaurant.address.presence || "—" %></p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-medium text-gray-700">Phone</h2>
+      <p class="mt-1 text-gray-800"><%= @restaurant.phone.presence || "—" %></p>
+    </div>
+  </div>
+</div>
