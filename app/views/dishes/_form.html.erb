@@ -5,7 +5,7 @@
 <div class="max-w-2xl mx-auto py-10">
   <!-- Header -->
   <div class="relative mb-10">
-    <%= link_to "← Back to dishes", restaurant_dishes_path(@restaurant),
+    <%= link_to "← Back to dishes", (@restaurant ? restaurant_dishes_path(@restaurant) : dishes_path),
           class: "absolute left-0 top-1 text-sm text-blue-600 hover:underline" %>
 
     <h1 class="text-2xl font-semibold text-center">
@@ -13,7 +13,7 @@
     </h1>
   </div>
 
-  <%= form_with model: [@restaurant, @dish],local: true,html: { multipart: true }, class: "space-y-6" do |f| %>
+  <%= form_with model: @restaurant ? [@restaurant, @dish] : @dish,local: true,html: { multipart: true }, class: "space-y-6" do |f| %>
     <%= hidden_field_tag :from, params[:from] %>
     <%= hidden_field_tag :tab,  params[:tab]  %>
     <% if @dish.errors.any? %>
@@ -81,7 +81,7 @@
     <div class="pt-4 flex items-center gap-3">
       <%= f.submit (@dish.persisted? ? "Update Dish" : "Create Dish"),
             class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
-      <%= link_to "Cancel", restaurant_dishes_path(@restaurant),
+      <%= link_to "Cancel", (@restaurant ? restaurant_dishes_path(@restaurant) : dishes_path),,
             class: "text-gray-600 text-sm hover:underline" %>
     </div>
   <% end %>

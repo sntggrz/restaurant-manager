@@ -60,11 +60,12 @@ class ItemsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_item
-      @item = Item.find(params.expect(:id))
+      @item = Item.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def item_params
-      params.expect(item: [ :order_id, :dish_id, :quantity, :price ])
+      params.require(:item)
+            .permit(:order_id, :dish_id, :quantity, :price)
     end
 end

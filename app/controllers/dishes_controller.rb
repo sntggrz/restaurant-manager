@@ -1,72 +1,65 @@
 class DishesController < ApplicationController
-  before_action :set_restaurant
+  before_action :maybe_set_restaurant
   before_action :set_dish, only: %i[show edit update destroy]
 
+  # GET /dishes or /restaurants/:restaurant_id/dishes
   def index
-    @dishes = @restaurant.dishes
+    @dishes = @restaurant ? @restaurant.dishes : Dish.all
   end
 
-  def show; end
+  # GET /dishes/:id or /restaurants/:restaurant_id/dishes/:id
+  def show
+  end
 
+  # GET /dishes/new or /restaurants/:restaurant_id/dishes/new
   def new
-    @dish = @restaurant.dishes.new
+    @dish = (@restaurant ? @restaurant.dishes : Dish).new
   end
 
-  def edit; end
+  # GET /dishes/:id/edit or /restaurants/:restaurant_id/dishes/:id/edit
+  def edit
+  end
 
+  # POST /dishes or /restaurants/:restaurant_id/dishes
   def create
-    Rails.logger.debug "⭐ PARAMS in CREATE: #{params[:dish].inspect}"
-    @dish = @restaurant.dishes.new(dish_params)
+    @dish = (@restaurant ? @restaurant.dishes : Dish).new(dish_params)
     if @dish.save
-      redirect_to [ @restaurant, @dish ], notice: "Dish created."
+      redirect_to @dish, notice: "Dish created."
     else
       render :new, status: :unprocessable_entity
     end
   end
 
+  # PATCH/PUT /dishes/:id or /restaurants/:restaurant_id/dishes/:id
   def update
-    Rails.logger.debug "⭐ PARAMS in UPDATE: #{params[:dish].inspect}"
     if @dish.update(dish_params)
-      redirect_to [ @restaurant, @dish ], notice: "Dish updated."
+      redirect_to @dish, notice: "Dish updated."
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
+  # DELETE /dishes/:id or /restaurants/:restaurant_id/dishes/:id
   def destroy
-    @dish.destroy!
-    redirect_to restaurant_dishes_path(@restaurant), status: :see_other, notice: "Dish deleted."
-  end
-
-  include ReturnPath
-
-  def after_order_path
-    back_to_dashboard? ? dashboard_restaurant_path(@restaurant) : restaurant_orders_path(@restaurant)
+    @dish.destroy
+    redirect_to dishes_url, notice: "Dish deleted."
   end
 
   private
 
-  def after_order_path
-    if params[:from] == "dashboard"
-      dashboard_restaurant_path(@restaurant, tab: params[:tab] || :orders)
-    else
-      restaurant_orders_path(@restaurant)
-    end
+  # If params[:restaurant_id] is present, load that restaurant.
+  def maybe_set_restaurant
+    @restaurant = Restaurant.find_by(id: params[:restaurant_id])
   end
 
-  def set_restaurant
-    @restaurant = Restaurant.find(params[:restaurant_id])
-  end
-
+  # Find either nested or top-level dish.
   def set_dish
-    @dish = @restaurant.dishes.find(params[:id])
+    scope = @restaurant ? @restaurant.dishes : Dish
+    @dish = scope.find(params[:id])
   end
 
   def dish_params
-    params.require(:dish).permit(
-      :name, :description, :price,
-      :dish_group, :restaurant_id,
-      :photo
-    )
+    params.require(:dish)
+          .permit(:name, :description, :price, :dish_group, :photo, :restaurant_id)
   end
 end
