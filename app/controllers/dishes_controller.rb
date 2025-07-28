@@ -42,7 +42,10 @@ class DishesController < ApplicationController
   # DELETE /dishes/:id or /restaurants/:restaurant_id/dishes/:id
   def destroy
     @dish.destroy
-    redirect_to dishes_url, notice: "Dish deleted."
+    flash[:notice] = "Dish deleted."
+    redirect_to(
+      @restaurant ? restaurant_dishes_path(@restaurant) : dishes_path
+    )
   end
 
   private

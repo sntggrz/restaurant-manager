@@ -37,8 +37,11 @@ class OrdersController < ApplicationController
   end
 
   def destroy
-    @order.destroy!
-    redirect_to dashboard_restaurant_path(@restaurant), status: :see_other, notice: "Order deleted."
+    @order.destroy
+    flash[:notice] = "Order deleted."
+    redirect_to(
+      @restaurant ? restaurant_orders_path(@restaurant) : orders_path
+    )
   end
 
   include ReturnPath
