@@ -11,7 +11,7 @@ jobs:
     continue-on-error: true        # ← allow Brakeman failures
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       # …
 
   scan_js:
@@ -19,14 +19,14 @@ jobs:
     # You can leave this strict, since it’s passing
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       # …
 
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       # …
 
   test:
